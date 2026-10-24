@@ -1,37 +1,73 @@
-Booking System
+# Booking System
 
-A backend booking system designed to manage shows, customer bookings, and seat reservations using REST APIs and a relational database.
+A RESTful backend application for managing shows, bookings, and seat reservations, with a focus on data integrity, seat availability, and booking lifecycle management.
 
-Project Overview
+## Overview
 
-The project implements the core entities and business logic required for a booking system, with a focus on maintaining seat availability, managing booking statuses, and preventing duplicate seat reservations.
+The Booking System manages movie and event shows, customer bookings, and individual seat reservations. It uses a relational database to maintain relationships between shows, bookings, and seats while enforcing essential booking rules.
 
-Core Entities
-Show: Represents a scheduled movie screening or event, including its date, time, screen, and seat-category pricing.
-Booking: Represents a customer's reservation for a particular show, including booking status, booking date, and total amount.
-Booking Seat: Represents individual seats associated with a booking, including seat number, category, price, and hold expiration time.
-Key Features
-CRUD operations for show, booking, and seat reservation entities.
-Support for both movie-based and event-based shows.
-Validation to ensure each show belongs to exactly one movie or event.
-Temporary seat reservations with a 10-minute hold period.
-Duplicate seat booking prevention for the same show.
-Seat availability management based on booking status and hold expiration.
-Booking lifecycle management, including Reserved, Confirmed, and Cancelled statuses.
-REST API error handling for invalid requests, missing resources, and booking conflicts.
-Technology Stack
-Backend: Node.js
-Database: PostgreSQL
-API Architecture: REST
-API Testing: Postman
-Core Logic
+## Core Entities
 
-The system maintains separate but related entities for shows, bookings, and seat reservations to reduce data duplication and preserve data relationships.
+### 1. Show
+Stores information about scheduled movie screenings and events.
+- Show date, time, and screen details
+- Movie or event association
+- Seat category pricing
+- Validation to ensure exactly one of `movieId` or `eventId` is provided
 
-A seat is considered unavailable when it belongs to a confirmed booking or an active reservation whose hold has not expired. Cancelled bookings and expired reservation holds release seat availability.
+### 2. Booking
+Represents a customer's reservation for a particular show.
+- Customer and show references
+- Booking date and time
+- Booking status: `Reserved`, `Confirmed`, or `Cancelled`
+- Total booking amount
 
-Business validations ensure invalid show configurations are rejected and existing active seat reservations cannot be duplicated through normal sequential booking requests.
+### 3. Booking Seat
+Represents individual seats associated with a booking.
+- Seat number and category
+- Individual seat price
+- Associated booking reference
+- Temporary seat hold expiration
 
-Project Objective
+## Key Features
 
-To implement the core backend functionality of a booking system with relational data management, reservation lifecycle handling, and essential business-rule validation.
+- REST API operations for managing shows, bookings, and seat reservations
+- Support for movie-based and event-based shows
+- Validation of show configurations
+- Temporary seat holds with a 10-minute expiration period
+- Prevention of duplicate active seat reservations
+- Seat availability tracking based on booking status and hold expiration
+- Booking lifecycle management
+- HTTP error handling for invalid requests, missing resources, and booking conflicts
+
+## Business Logic
+
+- A show must be associated with exactly one movie or event.
+- A seat cannot be reserved twice for the same show while an existing reservation is active.
+- Reserved seats remain unavailable while their hold is active.
+- Confirmed bookings continue to occupy their seats.
+- Cancelled bookings and expired reservation holds release seat availability.
+
+## Database Design
+
+The system uses three related PostgreSQL tables:
+
+| Table | Purpose |
+|---|---|
+| `show` | Stores show scheduling and pricing information |
+| `booking` | Stores customer booking details and status |
+| `booking_seat` | Stores individual seat reservation details |
+
+Foreign-key relationships connect bookings to shows and seat reservations to bookings, reducing data duplication and maintaining referential integrity.
+
+## Technology Stack
+
+- **Backend:** Node.js
+- **Database:** PostgreSQL
+- **Architecture:** RESTful APIs
+- **API Testing:** Postman
+- **Version Control:** Git
+
+## Project Objective
+
+To develop a structured booking backend that manages show schedules, customer reservations, and seat availability while enforcing business rules and maintaining consistent relationships between database entities.
